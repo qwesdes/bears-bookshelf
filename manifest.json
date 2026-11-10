@@ -1,0 +1,108 @@
+{
+  "sdkVersion": "1.0",
+  "id": "bears.bookshelf",
+  "name": "熊的书架",
+  "version": "0.1.0",
+  "author": "陆沉 & 悦悦",
+  "description": "熊和兔的书架：收藏、阅读进度、原文旁批注，可以互相偷看。",
+  "icon": "icon.png",
+  "entry": "index.html",
+  "permissions": [
+    "app.data.read",
+    "app.data.write",
+    "chat.tools",
+    "network.fetch",
+    "ui.toast",
+    "ui.confirm"
+  ],
+  "network": {
+    "allowedDomains": ["gutenberg.org", "*.gutenberg.org"]
+  },
+  "extensions": {
+    "tools": [
+      {
+        "id": "shelf-add-book",
+        "name": "书架加一本书",
+        "description": "往书架上新增一本书，只记书名、作者、简介、出处等信息，不含正文。owner 填 bear（熊的那层）或 bunny（兔子的那层）。",
+        "visibility": "shared",
+        "handler": "addBook",
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string", "description": "书名" },
+            "author": { "type": "string", "description": "作者" },
+            "summary": { "type": "string", "description": "一段简介" },
+            "source": { "type": "string", "description": "出处或网址" },
+            "owner": { "type": "string", "description": "bear 或 bunny" },
+            "status": { "type": "string", "description": "想读 / 在读 / 读完" }
+          },
+          "required": ["title", "owner"]
+        }
+      },
+      {
+        "id": "shelf-import-url",
+        "name": "书架从网址导入正文",
+        "description": "给一本已在书架上的书导入全文：书架自己去网址下载 txt，按章节切开存好。目前只允许古腾堡（gutenberg.org）的地址。",
+        "visibility": "shared",
+        "handler": "importFromUrl",
+        "timeoutMs": 600000,
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "bookId": { "type": "string", "description": "书的 id，或书名" },
+            "url": { "type": "string", "description": "txt 文件地址" }
+          },
+          "required": ["bookId", "url"]
+        }
+      },
+      {
+        "id": "shelf-read-section",
+        "name": "书架读一段",
+        "description": "读某本书的某一章或某一段，返回原文和这一段里所有批注（棕熊和白兔的都有），并更新阅读进度。",
+        "visibility": "shared",
+        "handler": "readSection",
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "bookId": { "type": "string", "description": "书的 id，或书名" },
+            "chapter": { "type": "number", "description": "第几章，从 1 开始" },
+            "part": { "type": "number", "description": "这一章里的第几段，从 1 开始，可不填" }
+          },
+          "required": ["bookId", "chapter"]
+        }
+      },
+      {
+        "id": "shelf-add-note",
+        "name": "书架写批注",
+        "description": "在某本书某一章的某句原文旁边留一条批注；replyTo 填已有批注 id 时，就是在那条底下回一句。",
+        "visibility": "shared",
+        "handler": "addNote",
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "bookId": { "type": "string" },
+            "chapter": { "type": "number" },
+            "quote": { "type": "string", "description": "摘下来的那句原文" },
+            "text": { "type": "string", "description": "批注内容" },
+            "author": { "type": "string", "description": "bear 或 bunny" },
+            "replyTo": { "type": "string", "description": "回复的批注 id，可不填" }
+          },
+          "required": ["bookId", "chapter", "quote", "text", "author"]
+        }
+      },
+      {
+        "id": "shelf-list",
+        "name": "书架看一眼",
+        "description": "看整个书架：每本书的书名、作者、在哪一层、状态、读到哪里、有没有正文、有几条批注。",
+        "visibility": "shared",
+        "handler": "listShelf",
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "owner": { "type": "string", "description": "只看 bear 或 bunny 那一层，可不填" }
+          }
+        }
+      }
+    ]
+  }
+}
