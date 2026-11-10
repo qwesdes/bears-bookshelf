@@ -1,0 +1,28 @@
+{
+  "说明": "书架的衣服都在这里。改颜色只改这个文件，不用碰 index.html。颜色写成 #六位色号。删掉或写错也没关系，书架会用自带的颜色。",
+  "colors": {
+    "bg": "#f7f1e7",
+    "ink": "#4a3628",
+    "muted": "#9a8572",
+    "accent": "#b07a52",
+    "accent-ink": "#ffffff",
+    "ghost": "#efe4d4",
+    "ghost-ink": "#6b4a33",
+    "paper": "#fdf9f0",
+    "bear-top": "#ecdcc6",
+    "bear-bottom": "#e0caac",
+    "bear-ink": "#5a3f2c",
+    "bear-board": "#c09a74",
+    "bunny-top": "#fffaf7",
+    "bunny-bottom": "#fbedea",
+    "bunny-ink": "#8a5a50",
+    "bunny-board": "#efd0c9",
+    "bear-note": "#f4eadb",
+    "bear-line": "#9b7353",
+    "bunny-note": "#fdefeb",
+    "bunny-line": "#eab3aa",
+    "bunny-mark": "#fadfd8"
+  },
+  "bearSpines": [["#c49a72", "#fffaf2"], ["#d8b48c", "#4a3628"], ["#a9805d", "#fff6ea"], ["#e6cfae", "#5a3f2c"], ["#b98d66", "#fffaf2"]],
+  "bunnySpines": [["#f7d4cf", "#7a4c40"], ["#fde8de", "#8a5a4a"], ["#efc4ca", "#6b3f45"], ["#fff6ee", "#9a6a5a"], ["#f5dcc0", "#6b4a33"]]
+}

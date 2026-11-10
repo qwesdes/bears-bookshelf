@@ -2,12 +2,13 @@
   "sdkVersion": "1.0",
   "id": "bears.bookshelf",
   "name": "熊的书架",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "陆沉 & 悦悦",
   "description": "熊和兔的书架：收藏、各自的阅读进度、原文旁批注，可以互相偷看。",
   "icon": "icon.png",
   "entry": "index.html",
-  "permissions": ["app.data.read", "app.data.write", "chat.tools", "network.fetch", "ui.toast", "ui.confirm"],
+  "permissions": ["app.data.read", "app.data.write", "app.assets.read", "chat.tools", "network.fetch", "ui.toast", "ui.confirm"],
+  "resources": { "assets": ["assets/theme.json"] },
   "network": { "allowedDomains": ["gutenberg.org", "*.gutenberg.org"] },
   "extensions": {
     "tools": [

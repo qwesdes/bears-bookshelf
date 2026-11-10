@@ -5,52 +5,54 @@
 <meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'>
 <title>熊的书架</title>
 <style>
-html,body{width:100%;min-height:100%;margin:0;background:#efe6d6;color:#3b2a1f;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
+:root{--bg:#f7f1e7;--ink:#4a3628;--muted:#9a8572;--accent:#b07a52;--accent-ink:#fff;--ghost:#efe4d4;--ghost-ink:#6b4a33;--paper:#fdf9f0;--bear-top:#ecdcc6;--bear-bottom:#e0caac;--bear-ink:#5a3f2c;--bear-board:#c09a74;--bunny-top:#fffaf7;--bunny-bottom:#fbedea;--bunny-ink:#8a5a50;--bunny-board:#efd0c9;--bear-note:#f4eadb;--bear-line:#9b7353;--bunny-note:#fdefeb;--bunny-line:#eab3aa;--bunny-mark:#fadfd8}
+html,body{width:100%;min-height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
 *{box-sizing:border-box}
 .app{min-height:100dvh;padding:var(--ai-phone-app-safe-top,88px) 16px var(--ai-phone-app-safe-bottom,24px)}
 h1{font-size:22px;margin:0 0 4px;letter-spacing:1px}
 h3{margin:0 0 8px}
-.sub{font-size:12px;color:#8a7461;margin-bottom:18px}
-.shelf{margin-bottom:26px;padding:14px 12px 0;border-radius:12px;box-shadow:0 3px 10px rgba(60,35,15,.12)}
-.shelf.bear{background:linear-gradient(#5a3b28,#47301f);color:#f3e6d3}
-.shelf.bunny{background:linear-gradient(#fdf6f2,#f7e7e3);color:#7a4c40}
+.sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.shelf{margin-bottom:26px;padding:14px 12px 0;border-radius:12px;box-shadow:0 2px 8px rgba(80,50,20,.08)}
+.shelf.bear{background:linear-gradient(var(--bear-top),var(--bear-bottom));color:var(--bear-ink)}
+.shelf.bunny{background:linear-gradient(var(--bunny-top),var(--bunny-bottom));color:var(--bunny-ink)}
 .shelf h2{font-size:14px;margin:0 0 10px;font-weight:600}
-.books{display:flex;align-items:flex-end;gap:6px;overflow-x:auto;min-height:150px;padding:0 4px}
-.board{height:12px;margin:0 -12px;border-radius:0 0 12px 12px}
-.bear .board{background:#2c1b12}
-.bunny .board{background:#e6c6be}
-.spine{flex:0 0 auto;width:42px;border-radius:5px 5px 2px 2px;padding:10px 0;writing-mode:vertical-rl;font-size:14px;letter-spacing:2px;display:flex;align-items:center;justify-content:space-between;box-shadow:inset -5px 0 0 rgba(0,0,0,.12),0 -1px 3px rgba(0,0,0,.15)}
-.spine small{font-size:10px;letter-spacing:0;opacity:.75}
+.books{display:flex;align-items:flex-end;gap:6px;overflow-x:auto;min-height:170px;padding:0 4px}
+.board{height:10px;margin:0 -12px;border-radius:0 0 12px 12px}
+.bear .board{background:var(--bear-board)}
+.bunny .board{background:var(--bunny-board)}
+.spine{flex:0 0 auto;width:44px;border-radius:5px 5px 2px 2px;padding:10px 0 8px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;box-shadow:inset -4px 0 0 rgba(0,0,0,.07),0 -1px 3px rgba(0,0,0,.08)}
+.spine .tt{writing-mode:vertical-rl;font-size:14px;letter-spacing:2px;line-height:1}
+.spine .pg{font-size:10px;line-height:1.35;text-align:center;opacity:.8}
 .empty{font-size:13px;opacity:.6;padding:20px 4px;align-self:center}
-.card{background:#fffaf2;border:1px solid #e3d3bd;border-radius:10px;padding:10px 12px;margin-bottom:8px;line-height:1.7;font-size:14px}
-.prog{font-size:13px;color:#6b4a33;margin:4px 0}
-button{font:inherit;min-height:40px;border:none;border-radius:10px;padding:0 14px;background:#8b5e3c;color:#fff}
-button.ghost{background:#e6d6bf;color:#5a3b28}
-button.danger{background:#c9604d}
+.card{background:#fffcf6;border:1px solid #ecdfcb;border-radius:10px;padding:10px 12px;margin-bottom:8px;line-height:1.7;font-size:14px}
+.prog{font-size:13px;color:var(--ghost-ink);margin:4px 0}
+button{font:inherit;min-height:40px;border:none;border-radius:10px;padding:0 14px;background:var(--accent);color:var(--accent-ink)}
+button.ghost{background:var(--ghost);color:var(--ghost-ink)}
+button.danger{background:#d9776a;color:#fff}
 button[disabled]{opacity:.4}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
-.back{background:none;color:#8b5e3c;padding:0;min-height:32px}
-input,textarea,select{font:inherit;width:100%;border:1px solid #dcc9b0;border-radius:8px;padding:8px;background:#fffdf8;color:#3b2a1f}
+.back{background:none;color:var(--accent);padding:0;min-height:32px}
+input,textarea,select{font:inherit;width:100%;border:1px solid #e3d4bf;border-radius:8px;padding:8px;background:#fffdf9;color:var(--ink)}
 textarea{min-height:80px;resize:vertical}
-label{display:block;font-size:12px;color:#8a7461;margin:10px 0 4px}
-.chap{padding:10px 2px;border-bottom:1px dashed #d8c4a8;font-size:14px}
-.paper{background:#fbf6ea;border-radius:12px;padding:18px 16px;box-shadow:0 2px 12px rgba(80,50,20,.1)}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 4px}
+.chap{padding:10px 2px;border-bottom:1px dashed #e3d4bf;font-size:14px}
+.paper{background:var(--paper);border-radius:12px;padding:18px 16px;box-shadow:0 2px 10px rgba(80,50,20,.07)}
 .reader p{line-height:1.95;font-size:16px;margin:0 0 12px;text-indent:2em;font-family:Georgia,'Songti SC',serif}
 mark{background:none;color:inherit;border-radius:2px}
-mark.bear{border-bottom:2px solid #6b4a33}
-mark.bunny{background:#f8d8cf}
-.slip{margin:-4px 0 16px 22px;padding:8px 10px;font-size:13px;line-height:1.6;border-radius:4px;transform:rotate(-.6deg);box-shadow:0 1px 5px rgba(0,0,0,.1)}
-.slip.bear{background:#f1e4cf;color:#3b2a1f;border-left:3px solid #6b4a33}
-.slip.bunny{background:#fde9e5;color:#8a4a45;border-left:3px solid #e8a9a0;transform:rotate(.6deg)}
-.slip .r{margin-top:5px;padding-top:5px;border-top:1px dashed rgba(0,0,0,.15)}
+mark.bear{border-bottom:2px solid var(--bear-line)}
+mark.bunny{background:var(--bunny-mark)}
+.slip{margin:-4px 0 16px 22px;padding:8px 10px;font-size:13px;line-height:1.6;border-radius:4px;transform:rotate(-.6deg);box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.slip.bear{background:var(--bear-note);color:var(--ink);border-left:3px solid var(--bear-line)}
+.slip.bunny{background:var(--bunny-note);color:#8a4a45;border-left:3px solid var(--bunny-line);transform:rotate(.6deg)}
+.slip .r{margin-top:5px;padding-top:5px;border-top:1px dashed rgba(0,0,0,.12)}
 .who{font-size:11px;opacity:.7}
 .nav{display:flex;justify-content:space-between;margin:16px 0}
-.sheet-mask{position:fixed;inset:0;background:rgba(40,25,15,.35);display:none}
-.sheet{position:fixed;left:0;right:0;bottom:0;max-height:78vh;overflow:auto;background:#fffaf2;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + var(--ai-phone-app-safe-bottom,0px));display:none}
+.sheet-mask{position:fixed;inset:0;background:rgba(40,25,15,.3);display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-height:78vh;overflow:auto;background:#fffcf7;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + var(--ai-phone-app-safe-bottom,0px));display:none}
 .show{display:block}
-.note{background:#f8efe2;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:14px;line-height:1.6}
-.reply{margin-left:18px;background:#fbf5ec}
-.quote{font-size:13px;color:#7b6450;border-left:3px solid #e8b9a8;padding-left:8px;margin:6px 0}
+.note{background:#f8f0e4;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:14px;line-height:1.6}
+.reply{margin-left:18px;background:#fbf6ee}
+.quote{font-size:13px;color:#7b6450;border-left:3px solid var(--bunny-line);padding-left:8px;margin:6px 0}
 </style>
 </head>
 <body>
@@ -76,7 +78,29 @@ async function notesOf(bookId) { return (await list('notes')).filter(n => n.book
 const prog = (b, who) => who === 'bunny' ? b.progressBunny : (b.progressBear || b.progress);
 const progText = p => p ? '第' + p.chapter + '章' + (p.part ? '第' + p.part + '份' : '') : '还没翻开';
 
+// ---------- 衣服 ----------
+let PAL = {
+  bear: [['#c49a72', '#fffaf2'], ['#d8b48c', '#4a3628'], ['#a9805d', '#fff6ea'], ['#e6cfae', '#5a3f2c'], ['#b98d66', '#fffaf2']],
+  bunny: [['#f7d4cf', '#7a4c40'], ['#fde8de', '#8a5a4a'], ['#efc4ca', '#6b3f45'], ['#fff6ee', '#9a6a5a'], ['#f5dcc0', '#6b4a33']]
+};
+async function loadTheme() {
+  try {
+    const url = await api.app.getAssetUrl('assets/theme.json');
+    const r = await fetch(url); if (!r.ok) return;
+    const t = await r.json(); const c = t.colors || {};
+    Object.keys(c).forEach(k => { if (c[k]) document.documentElement.style.setProperty('--' + k, c[k]); });
+    if (Array.isArray(t.bearSpines) && t.bearSpines.length) PAL.bear = t.bearSpines;
+    if (Array.isArray(t.bunnySpines) && t.bunnySpines.length) PAL.bunny = t.bunnySpines;
+  } catch (e) {}
+}
+
 // ---------- 切书 ----------
+async function readTxt(f) {
+  const buf = await f.arrayBuffer();
+  try { return new TextDecoder('utf-8', { fatal: true }).decode(buf); } catch (e) {}
+  try { return new TextDecoder('gb18030').decode(buf); } catch (e) {}
+  return new TextDecoder().decode(buf);
+}
 function stripGutenberg(t) {
   t = String(t || '').replace(/\r\n?/g, '\n');
   const s = t.search(/\*\*\*\s*START OF (THE|THIS) PROJECT GUTENBERG[^\n]*/i);
@@ -237,23 +261,37 @@ if ($mask) $mask.onclick = closeSheet;
 const toast = m => { try { api.ui.toast(m); } catch (e) {} };
 function go(v) { view = v; render().catch(e => { $app.innerHTML = `<p>出错了：${esc(e.message)}</p>`; }); }
 async function render() { if (view.name === 'book') return renderBook(); if (view.name === 'read') return renderRead(); return renderHome(); }
-const PAL = {
-  bear: [['#8b5e3c', '#f6e7d2'], ['#a0522d', '#fbeee0'], ['#6d4c3d', '#f1e1cc'], ['#c4a07a', '#3b2a1f'], ['#7f5539', '#f6e7d2']],
-  bunny: [['#f4c7c3', '#6b3f3a'], ['#fbe3d6', '#7a4c40'], ['#e8b4bc', '#5e3238'], ['#fff4ea', '#8a5a4a'], ['#f2d0a9', '#6b4a33']]
-};
 async function renderHome() {
   const books = await listCore();
   const shelf = (owner, name) => {
-    const bs = books.filter(b => b.owner === owner);
-    const spines = bs.map((b, k) => { const c = PAL[owner][k % 5]; const h = 116 + (b.title.length % 4) * 10; return `<div class='spine' data-book='${esc(b.id)}' style='background:${c[0]};color:${c[1]};height:${h}px'><span>${esc(b.title)}</span><small>🐻${b.bearAt ? b.bearAt.chapter : '·'} 🐰${b.bunnyAt ? b.bunnyAt.chapter : '·'}</small></div>`; }).join('');
+    const bs = books.filter(b => b.owner === owner); const pal = PAL[owner];
+    const spines = bs.map((b, k) => { const c = pal[k % pal.length]; const h = Math.max(140, b.title.length * 17 + 64); return `<div class='spine' data-book='${esc(b.id)}' style='background:${esc(c[0])};color:${esc(c[1])};height:${h}px'><span class='tt'>${esc(b.title)}</span><div class='pg'>🐻${b.bearAt ? b.bearAt.chapter : '·'}<br>🐰${b.bunnyAt ? b.bunnyAt.chapter : '·'}</div></div>`; }).join('');
     return `<div class='shelf ${owner}'><h2>${name}</h2><div class='books'>${spines || `<div class='empty'>这一层还空着</div>`}</div><div class='board'></div></div>`;
   };
-  $app.innerHTML = `<h1>熊的书架</h1><div class='sub'>咕嘟的熊和兔 · 可以互相偷看</div>` + shelf('bear', '🐻 熊的那层') + shelf('bunny', '🐰 兔子的那层') + `<div class='row'><button id='add'>＋ 放一本书</button></div>`;
+  $app.innerHTML = `<h1>熊的书架</h1><div class='sub'>咕嘟的熊和兔 · 可以互相偷看</div>` + shelf('bear', '🐻 熊的那层') + shelf('bunny', '🐰 兔子的那层') + `<div class='row'><button id='imp'>导入 txt</button><button class='ghost' id='add'>＋ 手写一本</button></div>`;
+  $app.onclick = null;
   $app.querySelectorAll('[data-book]').forEach(el => el.onclick = () => go({ name: 'book', id: el.dataset.book }));
   document.getElementById('add').onclick = addSheet;
+  document.getElementById('imp').onclick = txtSheet;
+}
+function txtSheet() {
+  openSheet(`<h3>导入一本 txt</h3><label>选文件</label><input type='file' id='t-file' accept='.txt,text/plain'><label>书名（先用文件名，可以改）</label><input id='t-title'><label>作者（可以不填）</label><input id='t-author'><label>放在哪一层</label><select id='t-owner'><option value=''>挑一层</option><option value='bunny'>🐰 兔子的那层</option><option value='bear'>🐻 熊的那层</option></select><label>章节标题（可以不填，一行一个，填了切得更准）</label><textarea id='t-heads'></textarea><div class='row'><button id='t-ok'>导进来</button><button class='ghost' id='t-x'>算了</button></div>`);
+  const $f = document.getElementById('t-file');
+  $f.onchange = () => { const f = $f.files[0]; if (f) document.getElementById('t-title').value = f.name.replace(/\.txt$/i, ''); };
+  document.getElementById('t-x').onclick = closeSheet;
+  document.getElementById('t-ok').onclick = async () => {
+    const f = $f.files[0]; if (!f) return toast('还没选文件');
+    const owner = val('t-owner'); if (!owner) return toast('先挑一层');
+    try {
+      toast('在切，稍等');
+      const r = await addBookCore({ title: val('t-title').trim() || f.name.replace(/\.txt$/i, ''), author: val('t-author'), owner });
+      const chs = await importText(r.book, await readTxt(f), val('t-heads'));
+      closeSheet(); toast('导入了' + chs.length + '章'); go({ name: 'book', id: r.book.id });
+    } catch (e) { toast(e.message); }
+  };
 }
 function addSheet() {
-  openSheet(`<h3>放一本书</h3><label>书名</label><input id='f-title'><label>作者</label><input id='f-author'><label>放在哪一层</label><select id='f-owner'><option value='bunny'>🐰 兔子的那层</option><option value='bear'>🐻 熊的那层</option></select><label>简介（可以不填）</label><textarea id='f-sum'></textarea><div class='row'><button id='f-ok'>放上去</button><button class='ghost' id='f-x'>算了</button></div>`);
+  openSheet(`<h3>手写一本</h3><label>书名</label><input id='f-title'><label>作者</label><input id='f-author'><label>放在哪一层</label><select id='f-owner'><option value='bunny'>🐰 兔子的那层</option><option value='bear'>🐻 熊的那层</option></select><label>简介（可以不填）</label><textarea id='f-sum'></textarea><div class='row'><button id='f-ok'>放上去</button><button class='ghost' id='f-x'>算了</button></div>`);
   document.getElementById('f-x').onclick = closeSheet;
   document.getElementById('f-ok').onclick = async () => {
     try { const r = await addBookCore({ title: val('f-title'), author: val('f-author'), owner: val('f-owner'), summary: val('f-sum') }); closeSheet(); toast(r.existed ? '这本已经在了' : '上架了'); go({ name: 'book', id: r.book.id }); } catch (e) { toast(e.message); }
@@ -264,8 +302,10 @@ async function renderBook() {
   const chs = b.hasText ? (b.chapterTitles || []) : [];
   const notes = await notesOf(b.id);
   const mine = prog(b, 'bunny');
-  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}张小纸条</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<div class='prog'>🐻 熊读到：${progText(prog(b, 'bear'))}</div><div class='prog'>🐰 兔子读到：${progText(mine)}</div><label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${mine ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('');
+  $app.onclick = null;
+  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}张小纸条</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<div class='prog'>🐻 熊读到：${progText(prog(b, 'bear'))}</div><div class='prog'>🐰 兔子读到：${progText(mine)}</div><label>书名</label><input id='nm' value='${esc(b.title)}'><label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${mine ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('');
   document.getElementById('bk').onclick = () => go({ name: 'home' });
+  document.getElementById('nm').onchange = async e => { const t = e.target.value.trim(); if (!t) return; await api.db.update('books', b.id, { title: t }); toast('改好了'); };
   document.getElementById('st').onchange = async e => { await api.db.update('books', b.id, { status: e.target.value }); toast('改好了'); };
   const rd = document.getElementById('rd'); if (rd) rd.onclick = () => go({ name: 'read', id: b.id, chapter: mine ? mine.chapter : 1 });
   document.getElementById('im').onclick = () => importSheet(b);
@@ -285,7 +325,7 @@ function importSheet(b) {
   document.getElementById('i-go').onclick = async () => { const url = val('i-url').trim(); try { toast('在拉，稍等'); await done(await fetchText(url), url); } catch (e) { toast(e.message); } };
   document.getElementById('i-ok').onclick = async () => {
     const f = document.getElementById('i-file').files[0];
-    if (f) return done(await f.text());
+    if (f) return done(await readTxt(f));
     if (val('i-paste').trim()) return done(val('i-paste'));
     toast('还没选文件，也没粘贴');
   };
@@ -332,7 +372,7 @@ function noteSheet(b, ci, para) {
   document.getElementById('n-x').onclick = closeSheet;
   document.getElementById('n-ok').onclick = async () => { try { const r = await addNoteCore({ bookId: b.id, chapter: ci, quote: val('n-q').trim(), text: val('n-t'), author: 'bunny' }); closeSheet(); if (r.warn) toast(r.warn); go({ name: 'read', id: b.id, chapter: ci }); } catch (e) { toast(e.message); } };
 }
-if ($app && api) go({ name: 'home' });
+if ($app && api) loadTheme().finally(() => go({ name: 'home' }));
 </script>
 </body>
 </html>
