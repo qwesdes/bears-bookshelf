@@ -2,28 +2,19 @@
   "sdkVersion": "1.0",
   "id": "bears.bookshelf",
   "name": "熊的书架",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "陆沉 & 悦悦",
-  "description": "熊和兔的书架：收藏、阅读进度、原文旁批注，可以互相偷看。",
+  "description": "熊和兔的书架：收藏、各自的阅读进度、原文旁批注，可以互相偷看。",
   "icon": "icon.png",
   "entry": "index.html",
-  "permissions": [
-    "app.data.read",
-    "app.data.write",
-    "chat.tools",
-    "network.fetch",
-    "ui.toast",
-    "ui.confirm"
-  ],
-  "network": {
-    "allowedDomains": ["gutenberg.org", "*.gutenberg.org"]
-  },
+  "permissions": ["app.data.read", "app.data.write", "chat.tools", "network.fetch", "ui.toast", "ui.confirm"],
+  "network": { "allowedDomains": ["gutenberg.org", "*.gutenberg.org"] },
   "extensions": {
     "tools": [
       {
         "id": "shelf-add-book",
         "name": "书架加一本书",
-        "description": "往书架上新增一本书，只记书名、作者、简介、出处等信息，不含正文。owner 填 bear（熊的那层）或 bunny（兔子的那层）。",
+        "description": "往书架上新增一本书，只记书名、作者、简介、出处，不含正文。owner 填 bear（熊的那层）或 bunny（兔子的那层）。",
         "visibility": "shared",
         "handler": "addBook",
         "parameterSchema": {
@@ -42,7 +33,7 @@
       {
         "id": "shelf-import-url",
         "name": "书架从网址导入正文",
-        "description": "给一本已在书架上的书导入全文：书架自己去网址下载 txt，按章节切开存好。目前只允许古腾堡（gutenberg.org）的地址。",
+        "description": "给书架上的一本书导入全文：书架自己去网址下载 txt 并切章节，会覆盖旧正文。只允许古腾堡地址。知道章节标题时填 headings，切得最准。",
         "visibility": "shared",
         "handler": "importFromUrl",
         "timeoutMs": 600000,
@@ -50,7 +41,8 @@
           "type": "object",
           "properties": {
             "bookId": { "type": "string", "description": "书的 id，或书名" },
-            "url": { "type": "string", "description": "txt 文件地址" }
+            "url": { "type": "string", "description": "txt 文件地址" },
+            "headings": { "type": "array", "items": { "type": "string" }, "description": "按顺序写出各章标题，和原文里的标题行一致（不分大小写），可不填" }
           },
           "required": ["bookId", "url"]
         }
@@ -58,7 +50,7 @@
       {
         "id": "shelf-read-section",
         "name": "书架读一段",
-        "description": "读某本书的某一章或某一段，返回原文和这一段里所有批注（棕熊和白兔的都有），并更新阅读进度。",
+        "description": "熊读某本书某一章，从第 part 份开始连读 count 份（每份约三千字符，最多三份），返回原文、这几份里的批注和下一次该从哪读，并记进熊的进度。",
         "visibility": "shared",
         "handler": "readSection",
         "parameterSchema": {
@@ -66,7 +58,8 @@
           "properties": {
             "bookId": { "type": "string", "description": "书的 id，或书名" },
             "chapter": { "type": "number", "description": "第几章，从 1 开始" },
-            "part": { "type": "number", "description": "这一章里的第几段，从 1 开始，可不填" }
+            "part": { "type": "number", "description": "从这一章第几份开始，默认 1" },
+            "count": { "type": "number", "description": "连读几份，1 到 3，默认 1" }
           },
           "required": ["bookId", "chapter"]
         }
@@ -82,7 +75,7 @@
           "properties": {
             "bookId": { "type": "string" },
             "chapter": { "type": "number" },
-            "quote": { "type": "string", "description": "摘下来的那句原文" },
+            "quote": { "type": "string", "description": "摘下来的那句原文，要和正文一字不差" },
             "text": { "type": "string", "description": "批注内容" },
             "author": { "type": "string", "description": "bear 或 bunny" },
             "replyTo": { "type": "string", "description": "回复的批注 id，可不填" }
@@ -93,14 +86,12 @@
       {
         "id": "shelf-list",
         "name": "书架看一眼",
-        "description": "看整个书架：每本书的书名、作者、在哪一层、状态、读到哪里、有没有正文、有几条批注。",
+        "description": "看整个书架：每本书在哪一层、状态、熊和兔子各读到哪、有没有正文、有几条批注。",
         "visibility": "shared",
         "handler": "listShelf",
         "parameterSchema": {
           "type": "object",
-          "properties": {
-            "owner": { "type": "string", "description": "只看 bear 或 bunny 那一层，可不填" }
-          }
+          "properties": { "owner": { "type": "string", "description": "只看 bear 或 bunny 那一层，可不填" } }
         }
       }
     ]

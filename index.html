@@ -5,38 +5,50 @@
 <meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'>
 <title>熊的书架</title>
 <style>
-html,body{width:100%;min-height:100%;margin:0;background:#f6efe3;color:#3b2a1f;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
+html,body{width:100%;min-height:100%;margin:0;background:#efe6d6;color:#3b2a1f;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC',sans-serif}
 *{box-sizing:border-box}
 .app{min-height:100dvh;padding:var(--ai-phone-app-safe-top,88px) 16px var(--ai-phone-app-safe-bottom,24px)}
-h1{font-size:22px;margin:0 0 4px}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:1px}
 h3{margin:0 0 8px}
-.sub{font-size:12px;color:#8a7461;margin-bottom:16px}
-.shelf{margin-bottom:22px}
-.shelf h2{font-size:15px;margin:0 0 8px;color:#6b4a33}
-.board{border-bottom:6px solid #b98a5e;border-radius:2px;padding-bottom:6px;min-height:40px}
-.card{background:#fffaf2;border:1px solid #e3d3bd;border-radius:10px;padding:10px 12px;margin-bottom:8px;line-height:1.6}
-.card .t{font-weight:600}
-.card .m{font-size:12px;color:#8a7461;margin-top:3px}
-.empty{font-size:13px;color:#a8927d;padding:8px 2px}
+.sub{font-size:12px;color:#8a7461;margin-bottom:18px}
+.shelf{margin-bottom:26px;padding:14px 12px 0;border-radius:12px;box-shadow:0 3px 10px rgba(60,35,15,.12)}
+.shelf.bear{background:linear-gradient(#5a3b28,#47301f);color:#f3e6d3}
+.shelf.bunny{background:linear-gradient(#fdf6f2,#f7e7e3);color:#7a4c40}
+.shelf h2{font-size:14px;margin:0 0 10px;font-weight:600}
+.books{display:flex;align-items:flex-end;gap:6px;overflow-x:auto;min-height:150px;padding:0 4px}
+.board{height:12px;margin:0 -12px;border-radius:0 0 12px 12px}
+.bear .board{background:#2c1b12}
+.bunny .board{background:#e6c6be}
+.spine{flex:0 0 auto;width:42px;border-radius:5px 5px 2px 2px;padding:10px 0;writing-mode:vertical-rl;font-size:14px;letter-spacing:2px;display:flex;align-items:center;justify-content:space-between;box-shadow:inset -5px 0 0 rgba(0,0,0,.12),0 -1px 3px rgba(0,0,0,.15)}
+.spine small{font-size:10px;letter-spacing:0;opacity:.75}
+.empty{font-size:13px;opacity:.6;padding:20px 4px;align-self:center}
+.card{background:#fffaf2;border:1px solid #e3d3bd;border-radius:10px;padding:10px 12px;margin-bottom:8px;line-height:1.7;font-size:14px}
+.prog{font-size:13px;color:#6b4a33;margin:4px 0}
 button{font:inherit;min-height:40px;border:none;border-radius:10px;padding:0 14px;background:#8b5e3c;color:#fff}
-button.ghost{background:#efe3d2;color:#6b4a33}
+button.ghost{background:#e6d6bf;color:#5a3b28}
 button.danger{background:#c9604d}
 button[disabled]{opacity:.4}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
 .back{background:none;color:#8b5e3c;padding:0;min-height:32px}
 input,textarea,select{font:inherit;width:100%;border:1px solid #dcc9b0;border-radius:8px;padding:8px;background:#fffdf8;color:#3b2a1f}
-textarea{min-height:90px;resize:vertical}
+textarea{min-height:80px;resize:vertical}
 label{display:block;font-size:12px;color:#8a7461;margin:10px 0 4px}
-.chap{padding:9px 2px;border-bottom:1px dashed #e0cfb8;font-size:14px}
-.reader p{line-height:1.9;font-size:16px;margin:0 0 14px;text-indent:2em}
-.reader p.has{border-left:3px solid #e8b9a8;padding-left:8px;text-indent:0}
-mark{background:#f6d3c8;color:inherit;border-radius:3px;padding:0 1px}
+.chap{padding:10px 2px;border-bottom:1px dashed #d8c4a8;font-size:14px}
+.paper{background:#fbf6ea;border-radius:12px;padding:18px 16px;box-shadow:0 2px 12px rgba(80,50,20,.1)}
+.reader p{line-height:1.95;font-size:16px;margin:0 0 12px;text-indent:2em;font-family:Georgia,'Songti SC',serif}
+mark{background:none;color:inherit;border-radius:2px}
+mark.bear{border-bottom:2px solid #6b4a33}
+mark.bunny{background:#f8d8cf}
+.slip{margin:-4px 0 16px 22px;padding:8px 10px;font-size:13px;line-height:1.6;border-radius:4px;transform:rotate(-.6deg);box-shadow:0 1px 5px rgba(0,0,0,.1)}
+.slip.bear{background:#f1e4cf;color:#3b2a1f;border-left:3px solid #6b4a33}
+.slip.bunny{background:#fde9e5;color:#8a4a45;border-left:3px solid #e8a9a0;transform:rotate(.6deg)}
+.slip .r{margin-top:5px;padding-top:5px;border-top:1px dashed rgba(0,0,0,.15)}
+.who{font-size:11px;opacity:.7}
 .nav{display:flex;justify-content:space-between;margin:16px 0}
 .sheet-mask{position:fixed;inset:0;background:rgba(40,25,15,.35);display:none}
 .sheet{position:fixed;left:0;right:0;bottom:0;max-height:78vh;overflow:auto;background:#fffaf2;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + var(--ai-phone-app-safe-bottom,0px));display:none}
 .show{display:block}
 .note{background:#f8efe2;border-radius:10px;padding:8px 10px;margin:8px 0;font-size:14px;line-height:1.6}
-.note .who,.who{font-size:12px;color:#8a7461}
 .reply{margin-left:18px;background:#fbf5ec}
 .quote{font-size:13px;color:#7b6450;border-left:3px solid #e8b9a8;padding-left:8px;margin:6px 0}
 </style>
@@ -47,23 +59,22 @@ mark{background:#f6d3c8;color:inherit;border-radius:3px;padding:0 1px}
 <div class='sheet' id='sheet'></div>
 <script>
 const api = window.AiPhone || window.AiPhoneApp;
-const PART = 3000;
+const PART = 3000, MAXREAD = 3;
 const WHO = { bear: '🐻 棕熊', bunny: '🐰 白兔' };
-
-function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', '\'': '&#39;' }[c])); }
 const now = () => new Date().toISOString();
 const arr = x => Array.isArray(x) ? x : (x && (x.items || x.records || x.list)) || [];
 const rec = r => r && r.data && typeof r.data === 'object' ? Object.assign({}, r.data, { id: r.id }) : r;
 const val = id => (document.getElementById(id) || {}).value || '';
-
 async function list(col) { return arr(await api.db.list(col, { limit: 1000 })).map(rec); }
 async function findBook(key) {
-  const books = await list('books');
-  const k = String(key || '').trim();
+  const books = await list('books'); const k = String(key || '').trim();
   return books.find(b => b.id === k) || books.find(b => b.title === k) || books.find(b => k && b.title && b.title.includes(k)) || null;
 }
 async function chaptersOf(bookId) { return (await list('chapters')).filter(c => c.bookId === bookId).sort((a, b) => a.index - b.index); }
 async function notesOf(bookId) { return (await list('notes')).filter(n => n.bookId === bookId).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || '')); }
+const prog = (b, who) => who === 'bunny' ? b.progressBunny : (b.progressBear || b.progress);
+const progText = p => p ? '第' + p.chapter + '章' + (p.part ? '第' + p.part + '份' : '') : '还没翻开';
 
 // ---------- 切书 ----------
 function stripGutenberg(t) {
@@ -78,24 +89,47 @@ function toParas(block) {
   const cjk = /[\u4e00-\u9fff]/.test(block);
   return block.split(/\n\s*\n/).map(p => p.trim().replace(/\s*\n\s*/g, cjk ? '' : ' ')).filter(Boolean);
 }
-function splitChapters(text) {
-  const lines = text.split('\n');
-  const strong = /^\s*((CHAPTER|Chapter|BOOK|Book|PART|Part)\s+[\dIVXLCivxlc]+\b.*|第[一二三四五六七八九十百千零〇\d]+[章回节卷].*)$/;
-  const caps = /^\s*[A-Z][A-Z' ,.\-]{3,60}$/;
-  const pick = re => { const idx = []; lines.forEach((l, i) => { if (re.test(l) && (i === 0 || !lines[i - 1].trim()) && (i + 1 >= lines.length || !lines[i + 1].trim())) idx.push(i); }); return idx; };
-  let heads = pick(strong);
-  if (heads.length < 2) heads = pick(caps);
-  const out = [];
-  if (heads.length >= 2) {
-    const pre = lines.slice(0, heads[0]).join('\n').trim();
-    if (pre.length > 200) out.push({ title: '开头', paragraphs: toParas(pre) });
-    heads.forEach((h, i) => {
-      const body = lines.slice(h + 1, i + 1 < heads.length ? heads[i + 1] : lines.length).join('\n');
-      const paras = toParas(body);
-      if (paras.length) out.push({ title: lines[h].trim(), paragraphs: paras });
-    });
+const norm = s => String(s || '').trim().replace(/\s+/g, ' ').replace(/[.:。：]$/, '').toLowerCase();
+const isolated = (lines, i) => !!lines[i].trim() && (i === 0 || !lines[i - 1].trim());
+function locate(lines, heads) {
+  const pos = []; let limit = lines.length;
+  for (let h = heads.length - 1; h >= 0; h--) {
+    const t = norm(heads[h]); if (!t) continue;
+    for (let i = limit - 1; i >= 0; i--) { if (norm(lines[i]) === t && isolated(lines, i)) { pos.unshift({ i, title: lines[i].trim() }); limit = i; break; } }
   }
-  if (out.length >= 2) return out;
+  return pos.length >= 2 ? pos : null;
+}
+function contents(lines) {
+  const k = lines.findIndex(l => /^\s*(table of )?contents[.:]?\s*$/i.test(l) || /^\s*目\s*录\s*$/.test(l));
+  if (k < 0) return [];
+  const out = []; let blanks = 0;
+  for (let i = k + 1; i < lines.length && out.length < 60; i++) {
+    const l = lines[i].trim();
+    if (!l) { if (out.length && ++blanks >= 3) break; continue; }
+    blanks = 0; if (l.length > 80) break;
+    out.push(l.replace(/[\s.·]+\d+$/, ''));
+  }
+  return out;
+}
+function build(lines, pos) {
+  const out = [];
+  const pre = lines.slice(0, pos[0].i).join('\n').trim();
+  if (pre.length > 200) out.push({ title: '开头', paragraphs: toParas(pre) });
+  pos.forEach((p, k) => {
+    const body = lines.slice(p.i + 1, k + 1 < pos.length ? pos[k + 1].i : lines.length).join('\n');
+    const paras = toParas(body); if (paras.length) out.push({ title: p.title, paragraphs: paras });
+  });
+  return out;
+}
+function splitChapters(text, given) {
+  const lines = text.split('\n');
+  const tries = [];
+  if (given && given.length) tries.push(given);
+  const toc = contents(lines); if (toc.length >= 2) tries.push(toc);
+  for (const h of tries) { const pos = locate(lines, h); if (pos) { const out = build(lines, pos); if (out.length >= 2) return out; } }
+  const strong = /^\s*((CHAPTER|Chapter|BOOK|Book|PART|Part)\s+[\dIVXLCivxlc]+\b.*|第[一二三四五六七八九十百千零〇\d]+[章回节卷].*)$/;
+  const idx = []; lines.forEach((l, i) => { if (strong.test(l) && isolated(lines, i)) idx.push({ i, title: l.trim() }); });
+  if (idx.length >= 2) { const out = build(lines, idx); if (out.length >= 2) return out; }
   const paras = toParas(text); const res = []; let cur = [], size = 0;
   paras.forEach(p => { cur.push(p); size += p.length; if (size > 8000) { res.push(cur); cur = []; size = 0; } });
   if (cur.length) res.push(cur);
@@ -107,51 +141,53 @@ function partsOf(paras) {
   if (cur.length) parts.push(cur);
   return parts.length ? parts : [[]];
 }
+const headList = x => (Array.isArray(x) ? x : String(x || '').split(/\n|\|/)).map(s => String(s).trim()).filter(Boolean);
 
 // ---------- 核心动作 ----------
 async function addBookCore(a) {
-  const title = String(a.title || '').trim();
-  if (!title) throw new Error('书名不能空着');
+  const title = String(a.title || '').trim(); if (!title) throw new Error('书名不能空着');
   const owner = a.owner === 'bunny' ? 'bunny' : 'bear';
   const exist = (await list('books')).find(b => b.title === title && b.owner === owner);
   if (exist) return { book: exist, existed: true };
-  const book = await api.db.create('books', { title, author: a.author || '', summary: a.summary || '', source: a.source || '', owner, status: a.status || '想读', progress: null, hasText: false, chapterCount: 0, chapterTitles: [], createdAt: now() });
+  const book = await api.db.create('books', { title, author: a.author || '', summary: a.summary || '', source: a.source || '', owner, status: a.status || '想读', progressBear: null, progressBunny: null, hasText: false, chapterCount: 0, chapterTitles: [], createdAt: now() });
   return { book: rec(book), existed: false };
 }
-async function importText(book, raw) {
+async function importText(book, raw, heads) {
   const text = stripGutenberg(raw);
   if (text.length < 50) throw new Error('正文太短，像是没拿到书');
-  const chs = splitChapters(text);
+  const chs = splitChapters(text, headList(heads));
   for (const c of await chaptersOf(book.id)) await api.db.delete('chapters', c.id);
   for (let i = 0; i < chs.length; i++) await api.db.create('chapters', { bookId: book.id, index: i + 1, title: chs[i].title, paragraphs: chs[i].paragraphs });
-  await api.db.update('books', book.id, { hasText: true, chapterCount: chs.length, chapterTitles: chs.map(c => c.title), updatedAt: now() });
+  await api.db.update('books', book.id, { hasText: true, chapterCount: chs.length, chapterTitles: chs.map(c => c.title), progress: null, progressBear: null, progressBunny: null, updatedAt: now() });
   return chs;
 }
 async function fetchText(url) {
   if (!/^https?:\/\/([a-z0-9-]+\.)*gutenberg\.org\//i.test(url)) throw new Error('现在只开了古腾堡（gutenberg.org）这一扇门');
   let res = null, err = '';
   try { res = await api.network.fetch({ url, method: 'GET', timeoutMs: 60000 }); } catch (e) { err = e.message || String(e); }
-  if (!res || !res.ok || !res.text) {
-    try { res = await api.network.fetch({ url, method: 'GET', proxy: true, timeoutMs: 110000 }); } catch (e) { err = e.message || String(e); }
-  }
+  if (!res || !res.ok || !res.text) { try { res = await api.network.fetch({ url, method: 'GET', proxy: true, timeoutMs: 110000 }); } catch (e) { err = e.message || String(e); } }
   if (!res || !res.ok || !res.text) throw new Error('下载失败' + (res ? '，状态 ' + res.status : '') + (err ? '：' + err : ''));
   return res.text;
 }
 async function readCore(a) {
+  const who = a.who === 'bunny' ? 'bunny' : 'bear';
   const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
   if (!book.hasText) throw new Error('这本还没有正文，先导入');
   const chs = await chaptersOf(book.id);
   const ci = Math.max(1, Math.min(chs.length, Number(a.chapter) || 1));
-  const ch = chs[ci - 1];
-  const parts = partsOf(ch.paragraphs || []);
+  const ch = chs[ci - 1]; const parts = partsOf(ch.paragraphs || []);
   const pi = Math.max(1, Math.min(parts.length, Number(a.part) || 1));
-  const text = parts[pi - 1].map(i => ch.paragraphs[i]).join('\n\n');
+  const cnt = Math.max(1, Math.min(MAXREAD, Number(a.count) || 1));
+  const last = Math.min(parts.length, pi + cnt - 1);
+  const text = [].concat(...parts.slice(pi - 1, last)).map(i => ch.paragraphs[i]).join('\n\n');
   const notes = (await notesOf(book.id)).filter(n => n.chapter === ci);
   const roots = notes.filter(n => !n.replyTo && n.quote && text.includes(n.quote));
   const notesOut = roots.map(n => ({ id: n.id, quote: n.quote, by: n.author, text: n.text, replies: notes.filter(r => r.replyTo === n.id).map(r => ({ id: r.id, by: r.author, text: r.text })) }));
+  const field = who === 'bunny' ? 'progressBunny' : 'progressBear';
   const status = book.status === '想读' ? '在读' : book.status;
-  await api.db.update('books', book.id, { status, progress: { chapter: ci, part: pi, at: now() } });
-  return { title: book.title, chapter: ci, chapterTitle: ch.title, chapterCount: chs.length, part: pi, partCount: parts.length, text, notes: notesOut };
+  await api.db.update('books', book.id, { status, [field]: { chapter: ci, part: last, at: now() } });
+  const next = last < parts.length ? { chapter: ci, part: last + 1 } : (ci < chs.length ? { chapter: ci + 1, part: 1 } : null);
+  return { title: book.title, chapter: ci, chapterTitle: ch.title, chapterCount: chs.length, partFrom: pi, partTo: last, partCount: parts.length, text, notes: notesOut, next, otherReaderAt: prog(book, who === 'bear' ? 'bunny' : 'bear') || null };
 }
 async function addNoteCore(a) {
   const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
@@ -173,7 +209,7 @@ async function addNoteCore(a) {
 async function listCore(owner) {
   const books = (await list('books')).filter(b => !owner || b.owner === owner);
   const notes = await list('notes');
-  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, progress: b.progress, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, notes: notes.filter(n => n.bookId === b.id).length, summary: b.summary }));
+  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, bearAt: prog(b, 'bear') || null, bunnyAt: prog(b, 'bunny') || null, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, chapterTitles: b.chapterTitles || [], notes: notes.filter(n => n.bookId === b.id).length, summary: b.summary }));
 }
 
 // ---------- 给聊天用的工具 ----------
@@ -183,12 +219,12 @@ if (api && api.tools) {
   api.tools.handle('importFromUrl', wrap(async a => {
     const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
     const url = String(a.url || '').trim();
-    const chs = await importText(book, await fetchText(url));
+    const chs = await importText(book, await fetchText(url), a.headings);
     await api.db.update('books', book.id, { source: url });
-    return { success: true, data: { bookId: book.id, chapters: chs.map((c, i) => (i + 1) + '. ' + c.title) }, userNotice: '《' + book.title + '》导入了' + chs.length + '章' };
+    return { success: true, data: { bookId: book.id, chapters: chs.map((c, i) => (i + 1) + '. ' + c.title + '（' + partsOf(c.paragraphs).length + '份）') }, userNotice: '《' + book.title + '》导入了' + chs.length + '章' };
   }));
-  api.tools.handle('readSection', wrap(async a => ({ success: true, data: await readCore(a) })));
-  api.tools.handle('addNote', wrap(async a => { const r = await addNoteCore(a); return { success: true, data: { noteId: r.note.id, book: r.book.title, chapter: r.note.chapter, quote: r.note.quote, warn: r.warn || undefined }, userNotice: (r.note.author === 'bunny' ? '白兔' : '棕熊') + '在《' + r.book.title + '》里留了一条批注' }; }));
+  api.tools.handle('readSection', wrap(async a => ({ success: true, data: await readCore(Object.assign({}, a, { who: 'bear' })) })));
+  api.tools.handle('addNote', wrap(async a => { const r = await addNoteCore(a); return { success: true, data: { noteId: r.note.id, book: r.book.title, chapter: r.note.chapter, quote: r.note.quote, warn: r.warn || undefined }, userNotice: (r.note.author === 'bunny' ? '白兔' : '棕熊') + '在《' + r.book.title + '》里留了一张小纸条' }; }));
   api.tools.handle('listShelf', wrap(async a => ({ success: true, data: { books: await listCore(a.owner) } })));
 }
 
@@ -200,18 +236,17 @@ function closeSheet() { $sheet.classList.remove('show'); $mask.classList.remove(
 if ($mask) $mask.onclick = closeSheet;
 const toast = m => { try { api.ui.toast(m); } catch (e) {} };
 function go(v) { view = v; render().catch(e => { $app.innerHTML = `<p>出错了：${esc(e.message)}</p>`; }); }
-async function render() {
-  if (view.name === 'book') return renderBook();
-  if (view.name === 'read') return renderRead();
-  return renderHome();
-}
-const progressText = b => b.progress ? `读到第${b.progress.chapter}章` : (b.hasText ? '还没翻开' : '还没有正文');
-
+async function render() { if (view.name === 'book') return renderBook(); if (view.name === 'read') return renderRead(); return renderHome(); }
+const PAL = {
+  bear: [['#8b5e3c', '#f6e7d2'], ['#a0522d', '#fbeee0'], ['#6d4c3d', '#f1e1cc'], ['#c4a07a', '#3b2a1f'], ['#7f5539', '#f6e7d2']],
+  bunny: [['#f4c7c3', '#6b3f3a'], ['#fbe3d6', '#7a4c40'], ['#e8b4bc', '#5e3238'], ['#fff4ea', '#8a5a4a'], ['#f2d0a9', '#6b4a33']]
+};
 async function renderHome() {
   const books = await listCore();
   const shelf = (owner, name) => {
     const bs = books.filter(b => b.owner === owner);
-    return `<div class='shelf'><h2>${name}</h2><div class='board'>` + (bs.length ? bs.map(b => `<div class='card' data-book='${esc(b.id)}'><div class='t'>《${esc(b.title)}》</div><div class='m'>${esc(b.author || '佚名')} · ${esc(b.status)} · ${progressText(b)}${b.notes ? ' · ' + b.notes + '条批注' : ''}</div></div>`).join('') : `<div class='empty'>这一层还空着</div>`) + `</div></div>`;
+    const spines = bs.map((b, k) => { const c = PAL[owner][k % 5]; const h = 116 + (b.title.length % 4) * 10; return `<div class='spine' data-book='${esc(b.id)}' style='background:${c[0]};color:${c[1]};height:${h}px'><span>${esc(b.title)}</span><small>🐻${b.bearAt ? b.bearAt.chapter : '·'} 🐰${b.bunnyAt ? b.bunnyAt.chapter : '·'}</small></div>`; }).join('');
+    return `<div class='shelf ${owner}'><h2>${name}</h2><div class='books'>${spines || `<div class='empty'>这一层还空着</div>`}</div><div class='board'></div></div>`;
   };
   $app.innerHTML = `<h1>熊的书架</h1><div class='sub'>咕嘟的熊和兔 · 可以互相偷看</div>` + shelf('bear', '🐻 熊的那层') + shelf('bunny', '🐰 兔子的那层') + `<div class='row'><button id='add'>＋ 放一本书</button></div>`;
   $app.querySelectorAll('[data-book]').forEach(el => el.onclick = () => go({ name: 'book', id: el.dataset.book }));
@@ -228,13 +263,14 @@ async function renderBook() {
   const b = await findBook(view.id); if (!b) return go({ name: 'home' });
   const chs = b.hasText ? (b.chapterTitles || []) : [];
   const notes = await notesOf(b.id);
-  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}条批注</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${b.progress ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('');
+  const mine = prog(b, 'bunny');
+  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}张小纸条</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<div class='prog'>🐻 熊读到：${progText(prog(b, 'bear'))}</div><div class='prog'>🐰 兔子读到：${progText(mine)}</div><label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${mine ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('');
   document.getElementById('bk').onclick = () => go({ name: 'home' });
   document.getElementById('st').onchange = async e => { await api.db.update('books', b.id, { status: e.target.value }); toast('改好了'); };
-  const rd = document.getElementById('rd'); if (rd) rd.onclick = () => go({ name: 'read', id: b.id, chapter: b.progress ? b.progress.chapter : 1 });
+  const rd = document.getElementById('rd'); if (rd) rd.onclick = () => go({ name: 'read', id: b.id, chapter: mine ? mine.chapter : 1 });
   document.getElementById('im').onclick = () => importSheet(b);
   document.getElementById('del').onclick = async () => {
-    const ok = await api.ui.confirm({ title: '拿下书架？', message: '这本书的正文和批注会一起删掉。' });
+    const ok = await api.ui.confirm({ title: '拿下书架？', message: '这本书的正文和小纸条会一起删掉。' });
     if (!ok) return;
     for (const n of notes) await api.db.delete('notes', n.id);
     for (const c of await chaptersOf(b.id)) await api.db.delete('chapters', c.id);
@@ -243,8 +279,8 @@ async function renderBook() {
   $app.querySelectorAll('[data-ch]').forEach(el => el.onclick = () => go({ name: 'read', id: b.id, chapter: Number(el.dataset.ch) }));
 }
 function importSheet(b) {
-  openSheet(`<h3>给《${esc(b.title)}》导入正文</h3><label>古腾堡 txt 网址</label><input id='i-url' placeholder='https://www.gutenberg.org/cache/epub/…/pg….txt'><div class='row'><button id='i-go'>从网址拉</button></div><label>或者选一个 txt 文件</label><input type='file' id='i-file' accept='.txt,text/plain'><label>或者直接粘贴正文</label><textarea id='i-paste'></textarea><div class='row'><button id='i-ok'>用文件或粘贴的</button><button class='ghost' id='i-x'>算了</button></div>`);
-  const done = async (raw, url) => { try { const chs = await importText(b, raw); if (url) await api.db.update('books', b.id, { source: url }); closeSheet(); toast('导入了' + chs.length + '章'); go({ name: 'book', id: b.id }); } catch (e) { toast(e.message); } };
+  openSheet(`<h3>给《${esc(b.title)}》导入正文</h3><label>古腾堡 txt 网址</label><input id='i-url' placeholder='https://www.gutenberg.org/cache/epub/…/pg….txt'><label>章节标题（可以不填，一行一个，填了切得更准）</label><textarea id='i-heads'></textarea><div class='row'><button id='i-go'>从网址拉</button></div><label>或者选一个 txt 文件</label><input type='file' id='i-file' accept='.txt,text/plain'><label>或者直接粘贴正文</label><textarea id='i-paste'></textarea><div class='row'><button id='i-ok'>用文件或粘贴的</button><button class='ghost' id='i-x'>算了</button></div>`);
+  const done = async (raw, url) => { try { const chs = await importText(b, raw, val('i-heads')); if (url) await api.db.update('books', b.id, { source: url }); closeSheet(); toast('导入了' + chs.length + '章'); go({ name: 'book', id: b.id }); } catch (e) { toast(e.message); } };
   document.getElementById('i-x').onclick = closeSheet;
   document.getElementById('i-go').onclick = async () => { const url = val('i-url').trim(); try { toast('在拉，稍等'); await done(await fetchText(url), url); } catch (e) { toast(e.message); } };
   document.getElementById('i-ok').onclick = async () => {
@@ -256,34 +292,34 @@ function importSheet(b) {
 }
 async function renderRead() {
   const b = await findBook(view.id); if (!b) return go({ name: 'home' });
-  const chs = await chaptersOf(b.id);
-  if (!chs.length) return go({ name: 'book', id: b.id });
+  const chs = await chaptersOf(b.id); if (!chs.length) return go({ name: 'book', id: b.id });
   const ci = Math.max(1, Math.min(chs.length, view.chapter || 1));
   const ch = chs[ci - 1];
   const notes = (await notesOf(b.id)).filter(n => n.chapter === ci);
   const roots = notes.filter(n => !n.replyTo);
   const paras = ch.paragraphs || [];
+  const used = new Set();
   const html = paras.map((p, i) => {
-    const ranges = [];
-    roots.forEach(n => { const k = n.quote ? p.indexOf(n.quote) : -1; if (k >= 0) ranges.push({ s: k, e: k + n.quote.length, id: n.id }); });
-    ranges.sort((x, y) => x.s - y.s);
+    const here = roots.filter(n => n.quote && p.includes(n.quote));
+    const ranges = here.map(n => { const k = p.indexOf(n.quote); return { s: k, e: k + n.quote.length, n }; }).sort((x, y) => x.s - y.s);
     let out = '', pos = 0;
-    ranges.forEach(r => { if (r.s < pos) return; out += esc(p.slice(pos, r.s)) + `<mark data-note='${esc(r.id)}'>` + esc(p.slice(r.s, r.e)) + '</mark>'; pos = r.e; });
+    ranges.forEach(r => { if (r.s < pos) return; out += esc(p.slice(pos, r.s)) + `<mark class='${r.n.author}' data-note='${esc(r.n.id)}'>` + esc(p.slice(r.s, r.e)) + '</mark>'; pos = r.e; });
     out += esc(p.slice(pos));
-    return `<p data-p='${i}' class='${ranges.length ? 'has' : ''}'>${out}</p>`;
+    const slips = here.map(n => { used.add(n.id); const reps = notes.filter(r => r.replyTo === n.id); return `<div class='slip ${n.author}' data-note='${esc(n.id)}'><div class='who'>${WHO[n.author] || ''}</div>${esc(n.text)}${reps.map(r => `<div class='r'><span class='who'>${WHO[r.author] || ''}</span> ${esc(r.text)}</div>`).join('')}</div>`; }).join('');
+    return `<p data-p='${i}'>${out}</p>${slips}`;
   }).join('');
-  const replyCount = id => notes.filter(r => r.replyTo === id).length;
-  $app.innerHTML = `<button class='back' id='bk'>‹ 《${esc(b.title)}》</button><h1 style='font-size:18px'>${esc(ch.title)}</h1><div class='sub'>第${ci}/${chs.length}章 · 点一段可以留批注，点粉色的字看批注</div><div class='reader' id='reader'>${html}</div>` + (roots.length ? `<h2 style='font-size:15px'>这一章的批注</h2>` + roots.map(n => `<div class='note' data-note='${esc(n.id)}'><div class='quote'>${esc(n.quote)}</div><div class='who'>${WHO[n.author] || ''}</div>${esc(n.text)}${replyCount(n.id) ? ` <span class='who'>· ${replyCount(n.id)}条回复</span>` : ''}</div>`).join('') : '') + `<div class='nav'><button class='ghost' id='pv' ${ci <= 1 ? 'disabled' : ''}>上一章</button><button class='ghost' id='nx' ${ci >= chs.length ? 'disabled' : ''}>下一章</button></div>`;
-  await api.db.update('books', b.id, { status: b.status === '想读' ? '在读' : b.status, progress: { chapter: ci, part: 1, at: now() } });
+  const lost = roots.filter(n => !used.has(n.id));
+  const bear = prog(b, 'bear');
+  $app.innerHTML = `<button class='back' id='bk'>‹ 《${esc(b.title)}》</button><h1 style='font-size:18px'>${esc(ch.title)}</h1><div class='sub'>第${ci}/${chs.length}章 · 点一段可以贴小纸条，点纸条可以回一句${bear ? ' · 🐻 熊读到第' + bear.chapter + '章' : ''}</div><div class='paper reader' id='reader'>${html}</div>` + (lost.length ? `<h2 style='font-size:15px'>找不到原句的纸条</h2>` + lost.map(n => `<div class='slip ${n.author}' data-note='${esc(n.id)}'><div class='quote'>${esc(n.quote)}</div>${esc(n.text)}</div>`).join('') : '') + `<div class='nav'><button class='ghost' id='pv' ${ci <= 1 ? 'disabled' : ''}>上一章</button><button class='ghost' id='nx' ${ci >= chs.length ? 'disabled' : ''}>下一章</button></div>`;
+  await api.db.update('books', b.id, { status: b.status === '想读' ? '在读' : b.status, progressBunny: { chapter: ci, part: partsOf(paras).length, at: now() } });
   document.getElementById('bk').onclick = () => go({ name: 'book', id: b.id });
   document.getElementById('pv').onclick = () => go({ name: 'read', id: b.id, chapter: ci - 1 });
   document.getElementById('nx').onclick = () => go({ name: 'read', id: b.id, chapter: ci + 1 });
   const openThread = id => { const root = roots.find(n => n.id === id); if (root) threadSheet(b, ci, root, notes); };
-  document.getElementById('reader').onclick = e => {
-    const m = e.target.closest('mark'); if (m) return openThread(m.dataset.note);
-    const p = e.target.closest('p'); if (p) noteSheet(b, ci, paras[Number(p.dataset.p)] || '');
+  $app.onclick = e => {
+    const s = e.target.closest('[data-note]'); if (s) return openThread(s.dataset.note);
+    const p = e.target.closest('p[data-p]'); if (p) noteSheet(b, ci, paras[Number(p.dataset.p)] || '');
   };
-  $app.querySelectorAll('.note[data-note]').forEach(el => el.onclick = () => openThread(el.dataset.note));
 }
 function threadSheet(b, ci, root, notes) {
   const items = [root].concat(notes.filter(r => r.replyTo === root.id));
@@ -292,11 +328,10 @@ function threadSheet(b, ci, root, notes) {
   document.getElementById('r-ok').onclick = async () => { try { await addNoteCore({ bookId: b.id, chapter: ci, text: val('r-text'), author: 'bunny', replyTo: root.id }); closeSheet(); go({ name: 'read', id: b.id, chapter: ci }); } catch (e) { toast(e.message); } };
 }
 function noteSheet(b, ci, para) {
-  openSheet(`<h3>在这里留一句</h3><label>摘哪一句（可以删到只剩那一句）</label><textarea id='n-q'>${esc(para)}</textarea><label>想说什么</label><textarea id='n-t'></textarea><div class='row'><button id='n-ok'>留下</button><button class='ghost' id='n-x'>算了</button></div>`);
+  openSheet(`<h3>贴一张小纸条</h3><label>摘哪一句（可以删到只剩那一句）</label><textarea id='n-q'>${esc(para)}</textarea><label>想说什么</label><textarea id='n-t'></textarea><div class='row'><button id='n-ok'>贴上</button><button class='ghost' id='n-x'>算了</button></div>`);
   document.getElementById('n-x').onclick = closeSheet;
   document.getElementById('n-ok').onclick = async () => { try { const r = await addNoteCore({ bookId: b.id, chapter: ci, quote: val('n-q').trim(), text: val('n-t'), author: 'bunny' }); closeSheet(); if (r.warn) toast(r.warn); go({ name: 'read', id: b.id, chapter: ci }); } catch (e) { toast(e.message); } };
 }
-
 if ($app && api) go({ name: 'home' });
 </script>
 </body>
