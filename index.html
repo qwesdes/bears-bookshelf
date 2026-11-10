@@ -11,6 +11,7 @@ html,body{width:100%;min-height:100%;margin:0;background:var(--bg);color:var(--i
 .app{min-height:100dvh;padding:var(--ai-phone-app-safe-top,88px) 16px var(--ai-phone-app-safe-bottom,24px)}
 h1{font-size:22px;margin:0 0 4px;letter-spacing:1px}
 h3{margin:0 0 8px}
+h2.sec{font-size:15px;margin:24px 0 8px}
 .sub{font-size:12px;color:var(--muted);margin-bottom:18px}
 .shelf{margin-bottom:26px;padding:14px 12px 0;border-radius:12px;box-shadow:0 2px 8px rgba(80,50,20,.08)}
 .shelf.bear{background:linear-gradient(var(--bear-top),var(--bear-bottom));color:var(--bear-ink)}
@@ -26,6 +27,9 @@ h3{margin:0 0 8px}
 .empty{font-size:13px;opacity:.6;padding:20px 4px;align-self:center}
 .card{background:#fffcf6;border:1px solid #ecdfcb;border-radius:10px;padding:10px 12px;margin-bottom:8px;line-height:1.7;font-size:14px}
 .prog{font-size:13px;color:var(--ghost-ink);margin:4px 0}
+.rv{background:var(--paper);border-radius:10px;padding:10px 12px;margin:6px 0 12px;line-height:1.8;font-size:14px;white-space:pre-wrap}
+.rv.bear{border-left:3px solid var(--bear-line)}
+.rv.none{color:var(--muted)}
 button{font:inherit;min-height:40px;border:none;border-radius:10px;padding:0 14px;background:var(--accent);color:var(--accent-ink)}
 button.ghost{background:var(--ghost);color:var(--ghost-ink)}
 button.danger{background:#d9776a;color:#fff}
@@ -75,6 +79,7 @@ async function findBook(key) {
 }
 async function chaptersOf(bookId) { return (await list('chapters')).filter(c => c.bookId === bookId).sort((a, b) => a.index - b.index); }
 async function notesOf(bookId) { return (await list('notes')).filter(n => n.bookId === bookId).sort((a, b) => (a.createdAt || '').localeCompare(b.createdAt || '')); }
+async function reviewsOf(bookId) { return (await list('reviews')).filter(r => r.bookId === bookId); }
 const prog = (b, who) => who === 'bunny' ? b.progressBunny : (b.progressBear || b.progress);
 const progText = p => p ? '第' + p.chapter + '章' + (p.part ? '第' + p.part + '份' : '') : '还没翻开';
 
@@ -165,6 +170,13 @@ function partsOf(paras) {
   if (cur.length) parts.push(cur);
   return parts.length ? parts : [[]];
 }
+function posPart(chs, n) {
+  const ch = chs[(n.chapter || 1) - 1]; if (!ch) return 1;
+  let pi = n.paraIndex;
+  if (pi == null || pi < 0) pi = (ch.paragraphs || []).findIndex(p => n.quote && p.includes(n.quote));
+  const k = partsOf(ch.paragraphs || []).findIndex(p => p.includes(pi));
+  return k >= 0 ? k + 1 : 1;
+}
 const headList = x => (Array.isArray(x) ? x : String(x || '').split(/\n|\|/)).map(s => String(s).trim()).filter(Boolean);
 
 // ---------- 核心动作 ----------
@@ -173,7 +185,7 @@ async function addBookCore(a) {
   const owner = a.owner === 'bunny' ? 'bunny' : 'bear';
   const exist = (await list('books')).find(b => b.title === title && b.owner === owner);
   if (exist) return { book: exist, existed: true };
-  const book = await api.db.create('books', { title, author: a.author || '', summary: a.summary || '', source: a.source || '', owner, status: a.status || '想读', progressBear: null, progressBunny: null, hasText: false, chapterCount: 0, chapterTitles: [], createdAt: now() });
+  const book = await api.db.create('books', { title, author: a.author || '', summary: a.summary || '', source: a.source || '', owner, status: a.status || '想读', progressBear: null, progressBunny: null, bearFinished: false, hasText: false, chapterCount: 0, chapterTitles: [], createdAt: now() });
   return { book: rec(book), existed: false };
 }
 async function importText(book, raw, heads) {
@@ -182,7 +194,7 @@ async function importText(book, raw, heads) {
   const chs = splitChapters(text, headList(heads));
   for (const c of await chaptersOf(book.id)) await api.db.delete('chapters', c.id);
   for (let i = 0; i < chs.length; i++) await api.db.create('chapters', { bookId: book.id, index: i + 1, title: chs[i].title, paragraphs: chs[i].paragraphs });
-  await api.db.update('books', book.id, { hasText: true, chapterCount: chs.length, chapterTitles: chs.map(c => c.title), progress: null, progressBear: null, progressBunny: null, updatedAt: now() });
+  await api.db.update('books', book.id, { hasText: true, chapterCount: chs.length, chapterTitles: chs.map(c => c.title), progress: null, progressBear: null, progressBunny: null, bearFinished: false, updatedAt: now() });
   return chs;
 }
 async function fetchText(url) {
@@ -197,6 +209,7 @@ async function readCore(a) {
   const who = a.who === 'bunny' ? 'bunny' : 'bear';
   const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
   if (!book.hasText) throw new Error('这本还没有正文，先导入');
+  const before = prog(book, who);
   const chs = await chaptersOf(book.id);
   const ci = Math.max(1, Math.min(chs.length, Number(a.chapter) || 1));
   const ch = chs[ci - 1]; const parts = partsOf(ch.paragraphs || []);
@@ -204,36 +217,66 @@ async function readCore(a) {
   const cnt = Math.max(1, Math.min(MAXREAD, Number(a.count) || 1));
   const last = Math.min(parts.length, pi + cnt - 1);
   const text = [].concat(...parts.slice(pi - 1, last)).map(i => ch.paragraphs[i]).join('\n\n');
-  const notes = (await notesOf(book.id)).filter(n => n.chapter === ci);
+  const all = await notesOf(book.id);
+  const notes = all.filter(n => n.chapter === ci);
   const roots = notes.filter(n => !n.replyTo && n.quote && text.includes(n.quote));
   const notesOut = roots.map(n => ({ id: n.id, quote: n.quote, by: n.author, text: n.text, replies: notes.filter(r => r.replyTo === n.id).map(r => ({ id: r.id, by: r.author, text: r.text })) }));
-  const field = who === 'bunny' ? 'progressBunny' : 'progressBear';
-  const status = book.status === '想读' ? '在读' : book.status;
-  await api.db.update('books', book.id, { status, [field]: { chapter: ci, part: last, at: now() } });
+  const batch = new Set();
+  roots.forEach(n => { batch.add(n.id); notes.filter(r => r.replyTo === n.id).forEach(r => batch.add(r.id)); });
+  let hint = null;
+  if (who === 'bear') {
+    for (const n of all) if (batch.has(n.id) && n.author === 'bunny' && !n.seenByBear) await api.db.update('notes', n.id, { seenByBear: true });
+    if (before) {
+      const behind = all.filter(n => n.author === 'bunny' && !n.seenByBear && !batch.has(n.id) && (n.chapter < before.chapter || (n.chapter === before.chapter && posPart(chs, n) <= (before.part || 1))));
+      if (behind.length) hint = '前面有兔子新留的纸条';
+    }
+  }
   const next = last < parts.length ? { chapter: ci, part: last + 1 } : (ci < chs.length ? { chapter: ci + 1, part: 1 } : null);
-  return { title: book.title, chapter: ci, chapterTitle: ch.title, chapterCount: chs.length, partFrom: pi, partTo: last, partCount: parts.length, text, notes: notesOut, next, otherReaderAt: prog(book, who === 'bear' ? 'bunny' : 'bear') || null };
+  const field = who === 'bunny' ? 'progressBunny' : 'progressBear';
+  const upd = { status: book.status === '想读' ? '在读' : book.status, [field]: { chapter: ci, part: last, at: now() } };
+  if (who === 'bear' && !next) upd.bearFinished = true;
+  await api.db.update('books', book.id, upd);
+  let bunnyReview;
+  if (who === 'bear' && (!next || book.bearFinished)) { const r = (await reviewsOf(book.id)).find(x => x.author === 'bunny'); if (r) bunnyReview = r.text; }
+  return { title: book.title, chapter: ci, chapterTitle: ch.title, chapterCount: chs.length, partFrom: pi, partTo: last, partCount: parts.length, text, notes: notesOut, next, finished: !next, hint, bunnyReview, otherReaderAt: prog(book, who === 'bear' ? 'bunny' : 'bear') || null };
 }
 async function addNoteCore(a) {
   const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
   const text = String(a.text || '').trim(); if (!text) throw new Error('批注是空的');
-  let quote = String(a.quote || '').trim(), chapter = Number(a.chapter) || 1, warn = '';
+  let quote = String(a.quote || '').trim(), chapter = Number(a.chapter) || 1, warn = '', paraIndex = -1;
   const author = a.author === 'bunny' ? 'bunny' : 'bear';
   if (a.replyTo) {
     const parent = (await notesOf(book.id)).find(n => n.id === a.replyTo);
     if (!parent) throw new Error('找不到要回复的那条批注');
-    quote = parent.quote; chapter = parent.chapter;
+    quote = parent.quote; chapter = parent.chapter; paraIndex = parent.paraIndex == null ? -1 : parent.paraIndex;
   } else {
     if (!quote) throw new Error('要摘一句原文');
     const ch = (await chaptersOf(book.id))[chapter - 1];
-    if (ch && !(ch.paragraphs || []).some(p => p.includes(quote))) warn = '这一章里没找到这句原文，批注存了，但正文里不会标出来';
+    paraIndex = ch ? (ch.paragraphs || []).findIndex(p => p.includes(quote)) : -1;
+    if (ch && paraIndex < 0) warn = '这一章里没找到这句原文，批注存了，但正文里不会标出来';
   }
-  const n = await api.db.create('notes', { bookId: book.id, chapter, quote, text, author, replyTo: a.replyTo || '', createdAt: now() });
+  const n = await api.db.create('notes', { bookId: book.id, chapter, quote, text, author, replyTo: a.replyTo || '', paraIndex, seenByBear: author === 'bear', createdAt: now() });
   return { note: rec(n), warn, book };
+}
+async function writeReviewCore(a) {
+  const book = await findBook(a.bookId); if (!book) throw new Error('书架上找不到这本：' + a.bookId);
+  const text = String(a.text || '').trim(); if (!text) throw new Error('读后感是空的');
+  const author = a.author === 'bunny' ? 'bunny' : 'bear';
+  const old = (await reviewsOf(book.id)).find(r => r.author === author);
+  if (old) await api.db.update('reviews', old.id, { text, updatedAt: now() });
+  else await api.db.create('reviews', { bookId: book.id, author, text, createdAt: now(), updatedAt: now() });
+  return book;
+}
+async function bearReviews(key) {
+  const book = await findBook(key); if (!book) throw new Error('书架上找不到这本：' + key);
+  const rs = await reviewsOf(book.id);
+  const mine = rs.find(r => r.author === 'bear'), hers = rs.find(r => r.author === 'bunny');
+  return { title: book.title, bear: mine ? mine.text : null, bunny: hers ? (book.bearFinished ? hers.text : '兔子写了，熊读完最后一份才能看') : null };
 }
 async function listCore(owner) {
   const books = (await list('books')).filter(b => !owner || b.owner === owner);
   const notes = await list('notes');
-  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, bearAt: prog(b, 'bear') || null, bunnyAt: prog(b, 'bunny') || null, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, chapterTitles: b.chapterTitles || [], notes: notes.filter(n => n.bookId === b.id).length, summary: b.summary }));
+  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, bearAt: prog(b, 'bear') || null, bunnyAt: prog(b, 'bunny') || null, bearFinished: !!b.bearFinished, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, chapterTitles: b.chapterTitles || [], notes: notes.filter(n => n.bookId === b.id).length, summary: b.summary }));
 }
 
 // ---------- 给聊天用的工具 ----------
@@ -249,6 +292,8 @@ if (api && api.tools) {
   }));
   api.tools.handle('readSection', wrap(async a => ({ success: true, data: await readCore(Object.assign({}, a, { who: 'bear' })) })));
   api.tools.handle('addNote', wrap(async a => { const r = await addNoteCore(a); return { success: true, data: { noteId: r.note.id, book: r.book.title, chapter: r.note.chapter, quote: r.note.quote, warn: r.warn || undefined }, userNotice: (r.note.author === 'bunny' ? '白兔' : '棕熊') + '在《' + r.book.title + '》里留了一张小纸条' }; }));
+  api.tools.handle('writeReview', wrap(async a => { const b = await writeReviewCore(a); return { success: true, data: { book: b.title }, userNotice: (a.author === 'bunny' ? '白兔' : '棕熊') + '写了《' + b.title + '》的读后感' }; }));
+  api.tools.handle('readReviews', wrap(async a => ({ success: true, data: await bearReviews(a.bookId) })));
   api.tools.handle('listShelf', wrap(async a => ({ success: true, data: { books: await listCore(a.owner) } })));
 }
 
@@ -301,18 +346,22 @@ async function renderBook() {
   const b = await findBook(view.id); if (!b) return go({ name: 'home' });
   const chs = b.hasText ? (b.chapterTitles || []) : [];
   const notes = await notesOf(b.id);
+  const rs = await reviewsOf(b.id);
+  const rb = rs.find(r => r.author === 'bear'), rn = rs.find(r => r.author === 'bunny');
   const mine = prog(b, 'bunny');
   $app.onclick = null;
-  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}张小纸条</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<div class='prog'>🐻 熊读到：${progText(prog(b, 'bear'))}</div><div class='prog'>🐰 兔子读到：${progText(mine)}</div><label>书名</label><input id='nm' value='${esc(b.title)}'><label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${mine ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('');
+  $app.innerHTML = `<button class='back' id='bk'>‹ 书架</button><h1>《${esc(b.title)}》</h1><div class='sub'>${esc(b.author || '佚名')} · ${b.owner === 'bear' ? '🐻 熊的那层' : '🐰 兔子的那层'} · ${notes.length}张小纸条</div>` + (b.summary ? `<div class='card'>${esc(b.summary)}</div>` : '') + `<div class='prog'>🐻 熊读到：${b.bearFinished ? '读完了' : progText(prog(b, 'bear'))}</div><div class='prog'>🐰 兔子读到：${progText(mine)}</div><label>书名</label><input id='nm' value='${esc(b.title)}'><label>状态</label><select id='st'>${['想读', '在读', '读完'].map(s => `<option ${s === b.status ? 'selected' : ''}>${s}</option>`).join('')}</select><div class='row'>` + (b.hasText ? `<button id='rd'>${mine ? '接着读' : '翻开'}</button>` : '') + `<button class='ghost' id='im'>${b.hasText ? '重新导入正文' : '导入正文'}</button><button class='danger' id='del'>拿下书架</button></div>` + chs.map((t, i) => `<div class='chap' data-ch='${i + 1}'>${i + 1}. ${esc(t)}</div>`).join('') + `<h2 class='sec'>读后感</h2><div class='who'>🐻 棕熊</div><div class='rv bear ${rb ? '' : 'none'}'>${rb ? esc(rb.text) : '熊还没写'}</div><div class='who'>🐰 白兔${b.bearFinished ? '' : ' · 熊读完这本才看得到'}</div><textarea id='rvn'>${rn ? esc(rn.text) : ''}</textarea><div class='row'><button id='rvok'>存下读后感</button></div>`;
   document.getElementById('bk').onclick = () => go({ name: 'home' });
   document.getElementById('nm').onchange = async e => { const t = e.target.value.trim(); if (!t) return; await api.db.update('books', b.id, { title: t }); toast('改好了'); };
   document.getElementById('st').onchange = async e => { await api.db.update('books', b.id, { status: e.target.value }); toast('改好了'); };
   const rd = document.getElementById('rd'); if (rd) rd.onclick = () => go({ name: 'read', id: b.id, chapter: mine ? mine.chapter : 1 });
   document.getElementById('im').onclick = () => importSheet(b);
+  document.getElementById('rvok').onclick = async () => { try { await writeReviewCore({ bookId: b.id, text: val('rvn'), author: 'bunny' }); toast('存好了'); } catch (e) { toast(e.message); } };
   document.getElementById('del').onclick = async () => {
-    const ok = await api.ui.confirm({ title: '拿下书架？', message: '这本书的正文和小纸条会一起删掉。' });
+    const ok = await api.ui.confirm({ title: '拿下书架？', message: '这本书的正文、小纸条和读后感会一起删掉。' });
     if (!ok) return;
     for (const n of notes) await api.db.delete('notes', n.id);
+    for (const r of rs) await api.db.delete('reviews', r.id);
     for (const c of await chaptersOf(b.id)) await api.db.delete('chapters', c.id);
     await api.db.delete('books', b.id); go({ name: 'home' });
   };

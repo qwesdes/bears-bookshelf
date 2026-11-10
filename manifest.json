@@ -2,9 +2,9 @@
   "sdkVersion": "1.0",
   "id": "bears.bookshelf",
   "name": "熊的书架",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "author": "陆沉 & 悦悦",
-  "description": "熊和兔的书架：收藏、各自的阅读进度、原文旁批注，可以互相偷看。",
+  "description": "熊和兔的书架：收藏、各自的阅读进度、原文旁批注、读后感，可以互相偷看。",
   "icon": "icon.png",
   "entry": "index.html",
   "permissions": ["app.data.read", "app.data.write", "app.assets.read", "chat.tools", "network.fetch", "ui.toast", "ui.confirm"],
@@ -51,7 +51,7 @@
       {
         "id": "shelf-read-section",
         "name": "书架读一段",
-        "description": "熊读某本书某一章，从第 part 份开始连读 count 份（每份约三千字符，最多三份），返回原文、这几份里的批注和下一次该从哪读，并记进熊的进度。",
+        "description": "熊读某本书某一章，从第 part 份开始连读 count 份（每份约三千字符，最多三份），返回原文、这几份里的批注、下一次从哪读，并记进熊的进度。hint 不为空时，说明熊读过的地方有兔子新留的纸条。读完最后一份时会附上兔子的读后感。",
         "visibility": "shared",
         "handler": "readSection",
         "parameterSchema": {
@@ -85,9 +85,37 @@
         }
       },
       {
+        "id": "shelf-write-review",
+        "name": "书架写读后感",
+        "description": "给一整本书写读后感，每人一份，再写会覆盖旧的。author 填 bear 或 bunny。",
+        "visibility": "shared",
+        "handler": "writeReview",
+        "parameterSchema": {
+          "type": "object",
+          "properties": {
+            "bookId": { "type": "string", "description": "书的 id，或书名" },
+            "text": { "type": "string", "description": "读后感内容" },
+            "author": { "type": "string", "description": "bear 或 bunny" }
+          },
+          "required": ["bookId", "text", "author"]
+        }
+      },
+      {
+        "id": "shelf-read-reviews",
+        "name": "书架看读后感",
+        "description": "看一本书的读后感。熊自己的随时能看；兔子的要等熊读完这本最后一份才给，没读完只告诉熊她写没写。",
+        "visibility": "shared",
+        "handler": "readReviews",
+        "parameterSchema": {
+          "type": "object",
+          "properties": { "bookId": { "type": "string", "description": "书的 id，或书名" } },
+          "required": ["bookId"]
+        }
+      },
+      {
         "id": "shelf-list",
         "name": "书架看一眼",
-        "description": "看整个书架：每本书在哪一层、状态、熊和兔子各读到哪、有没有正文、有几条批注。",
+        "description": "看整个书架：每本书在哪一层、状态、熊和兔子各读到哪、熊读完没有、有没有正文、有几条批注。",
         "visibility": "shared",
         "handler": "listShelf",
         "parameterSchema": {
