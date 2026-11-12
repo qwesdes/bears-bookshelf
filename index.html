@@ -404,6 +404,7 @@ async function renderRead() {
   const lost = roots.filter(n => !used.has(n.id));
   const bear = prog(b, 'bear');
   $app.innerHTML = `<button class='back' id='bk'>‹ 《${esc(b.title)}》</button><h1 style='font-size:18px'>${esc(ch.title)}</h1><div class='sub'>第${ci}/${chs.length}章 · 点一段可以贴小纸条，点纸条可以回一句${bear ? ' · 🐻 熊读到第' + bear.chapter + '章' : ''}</div><div class='paper reader' id='reader'>${html}</div>` + (lost.length ? `<h2 style='font-size:15px'>找不到原句的纸条</h2>` + lost.map(n => `<div class='slip ${n.author}' data-note='${esc(n.id)}'><div class='quote'>${esc(n.quote)}</div>${esc(n.text)}</div>`).join('') : '') + `<div class='nav'><button class='ghost' id='pv' ${ci <= 1 ? 'disabled' : ''}>上一章</button><button class='ghost' id='nx' ${ci >= chs.length ? 'disabled' : ''}>下一章</button></div>`;
+  window.scrollTo(0, 0); if (document.scrollingElement) document.scrollingElement.scrollTop = 0; if ($app) $app.scrollTop = 0;
   await api.db.update('books', b.id, { status: b.status === '想读' ? '在读' : b.status, progressBunny: { chapter: ci, part: partsOf(paras).length, at: now() } });
   document.getElementById('bk').onclick = () => go({ name: 'book', id: b.id });
   document.getElementById('pv').onclick = () => go({ name: 'read', id: b.id, chapter: ci - 1 });
