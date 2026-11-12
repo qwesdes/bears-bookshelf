@@ -116,6 +116,9 @@ function stripGutenberg(t) {
 }
 function toParas(block) {
   const cjk = /[\u4e00-\u9fff]/.test(block);
+  const blank = (block.match(/\n\s*\n/g) || []).length;
+  const lineCount = block.split('\n').filter(l => l.trim()).length;
+  if (lineCount > 1 && blank < lineCount / 4) return block.split('\n').map(p => p.trim()).filter(Boolean);
   return block.split(/\n\s*\n/).map(p => p.trim().replace(/\s*\n\s*/g, cjk ? '' : ' ')).filter(Boolean);
 }
 const norm = s => String(s || '').trim().replace(/\s+/g, ' ').replace(/[.:。：]$/, '').toLowerCase();
