@@ -277,6 +277,7 @@ async function bearReviews(key) {
   const mine = rs.find(r => r.author === 'bear'), hers = rs.find(r => r.author === 'bunny');
   return { title: book.title, bear: mine ? mine.text : null, bunny: hers ? (book.bearFinished ? hers.text : '兔子写了，熊读完最后一份才能看') : null };
 }
+const PAW = `<img src='https://i.postimg.cc/ncLc416t/retouch-2026111409440487.png' alt='🐾' style='width:16px;height:16px;object-fit:contain;vertical-align:-3px'>`;
 const furthest = (b, mine) => Math.max(b.maxBunny || 0, mine ? mine.chapter || 0 : 0);
 const unreadPaws = (b, notes, mine) => notes.filter(n => n.author === 'bear' && !n.seenByBunny && n.chapter <= furthest(b, mine));
 function pawLine(b, notes, mine) { const u = unreadPaws(b, notes, mine); if (!u.length) return ''; const cs = [...new Set(u.map(n => n.chapter))].sort((x, y) => x - y); const ts = b.chapterTitles || []; return `<div class='prog'>🐾 熊回了你${u.length}张，在：${cs.map(c => esc(ts[c - 1] || ('第' + c + '章'))).join('、')}</div>`; }
