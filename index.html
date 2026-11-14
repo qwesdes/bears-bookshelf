@@ -259,7 +259,7 @@ async function addNoteCore(a) {
     paraIndex = ch ? (ch.paragraphs || []).findIndex(p => p.includes(quote)) : -1;
     if (ch && paraIndex < 0) warn = '这一章里没找到这句原文，批注存了，但正文里不会标出来';
   }
-  const n = await api.db.create('notes', { bookId: book.id, chapter, quote, text, author, replyTo: a.replyTo || '', paraIndex, seenByBear: author === 'bear', createdAt: now() });
+  const n = await api.db.create('notes', { bookId: book.id, chapter, quote, text, author, replyTo: a.replyTo || '', paraIndex, seenByBear: author === 'bear', seenByBunny: author === 'bunny', createdAt: now() });
   return { note: rec(n), warn, book };
 }
 async function writeReviewCore(a) {
