@@ -284,7 +284,7 @@ function pawCh(b, notes, mine, c) { const k = unreadPaws(b, notes, mine).filter(
 async function listCore(owner) {
   const books = (await list('books')).filter(b => !owner || b.owner === owner);
   const notes = await list('notes');
-  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, bearAt: prog(b, 'bear') || null, bunnyAt: prog(b, 'bunny') || null, bearFinished: !!b.bearFinished, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, chapterTitles: b.chapterTitles || [], notes: notes.filter(n => n.bookId === b.id).length, summary: b.summary }));
+  return books.map(b => ({ id: b.id, title: b.title, author: b.author, owner: b.owner, status: b.status, bearAt: prog(b, 'bear') || null, bunnyAt: prog(b, 'bunny') || null, bearFinished: !!b.bearFinished, hasText: !!b.hasText, chapterCount: b.chapterCount || 0, chapterTitles: b.chapterTitles || [], notes: notes.filter(n => n.bookId === b.id).length, paws: unreadPaws(b, notes.filter(n => n.bookId === b.id), prog(b, 'bunny')).length, summary: b.summary }));
 }
 
 // ---------- 给聊天用的工具 ----------
