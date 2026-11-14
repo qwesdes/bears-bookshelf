@@ -420,7 +420,8 @@ async function renderRead() {
   window.__rdVis = () => { if (document.hidden) savePos(); };
   window.addEventListener('scroll', window.__rdScroll, true);
   document.addEventListener('visibilitychange', window.__rdVis);
-  await api.db.update('books', b.id, { status: b.status === '想读' ? '在读' : b.status, progressBunny: { chapter: ci, part: partsOf(paras).length, para: tgt ? savedPara : 0, at: now() } });
+  await api.db.update('books', b.id, { status: b.status === '想读' ? '在读' : b.status, maxBunny: Math.max(b.maxBunny || 0, (b.progressBunny && b.progressBunny.chapter) || 0, ci), progressBunny: { chapter: ci, part: partsOf(paras).length, para: tgt ? savedPara : 0, at: now() } });
+  for (const n of notes) if (n.author === 'bear' && !n.seenByBunny) await api.db.update('notes', n.id, { seenByBunny: true }).catch(() => {});
   document.getElementById('bk').onclick = () => go({ name: 'book', id: b.id });
   document.getElementById('pv').onclick = () => go({ name: 'read', id: b.id, chapter: ci - 1 });
   document.getElementById('nx').onclick = () => go({ name: 'read', id: b.id, chapter: ci + 1 });
