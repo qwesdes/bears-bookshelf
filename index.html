@@ -281,7 +281,7 @@ const PAW = `<img src='https://i.postimg.cc/ncLc416t/retouch-2026111409440487.pn
 const furthest = (b, mine) => Math.max(b.maxBunny || 0, mine ? mine.chapter || 0 : 0);
 const unreadPaws = (b, notes, mine) => notes.filter(n => n.author === 'bear' && !n.seenByBunny && n.chapter <= furthest(b, mine));
 function pawLine(b, notes, mine) { const u = unreadPaws(b, notes, mine); if (!u.length) return ''; const cs = [...new Set(u.map(n => n.chapter))].sort((x, y) => x - y); const ts = b.chapterTitles || []; return `<div class='prog'>${PAW} 熊回了你${u.length}张，在：${cs.map(c => esc(ts[c - 1] || ('第' + c + '章'))).join('、')}</div>`; }
-function pawCh(b, notes, mine, c) { const k = unreadPaws(b, notes, mine).filter(n => n.chapter === c).length; return k ? ' 🐾' + k : ''; }
+function pawCh(b, notes, mine, c) { const k = unreadPaws(b, notes, mine).filter(n => n.chapter === c).length; return k ? ' ' + PAW + k : ''; }
 async function listCore(owner) {
   const books = (await list('books')).filter(b => !owner || b.owner === owner);
   const notes = await list('notes');
