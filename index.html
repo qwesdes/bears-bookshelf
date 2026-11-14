@@ -319,7 +319,7 @@ async function renderHome() {
   const books = await listCore();
   const shelf = (owner, name) => {
     const bs = books.filter(b => b.owner === owner); const pal = PAL[owner];
-    const spines = bs.map((b, k) => { const c = pal[k % pal.length]; const h = Math.max(140, b.title.length * 17 + 64); return `<div class='spine' data-book='${esc(b.id)}' style='background:${esc(c[0])};color:${esc(c[1])};height:${h}px'><span class='tt'>${esc(b.title)}</span>${b.paws ? `<div style='font-size:11px;line-height:1.2;text-align:center'>🐾<br>${b.paws}</div>` : ''}<div class='pg'>🐻${b.bearAt ? b.bearAt.chapter : '·'}<br>🐰${b.bunnyAt ? b.bunnyAt.chapter : '·'}</div></div>`; }).join('');
+    const spines = bs.map((b, k) => { const c = pal[k % pal.length]; const h = Math.max(140, b.title.length * 17 + 64); return `<div class='spine' data-book='${esc(b.id)}' style='background:${esc(c[0])};color:${esc(c[1])};height:${h}px'><span class='tt'>${esc(b.title)}</span>${b.paws ? `<div style='font-size:11px;line-height:1.2;text-align:center'>${PAW}<br>${b.paws}</div>` : ''}<div class='pg'>🐻${b.bearAt ? b.bearAt.chapter : '·'}<br>🐰${b.bunnyAt ? b.bunnyAt.chapter : '·'}</div></div>`; }).join('');
     return `<div class='shelf ${owner}'><h2>${name}</h2><div class='books'>${spines || `<div class='empty'>这一层还空着</div>`}</div><div class='board'></div></div>`;
   };
   $app.innerHTML = `<h1>熊的书架</h1><div class='sub'>咕嘟的熊和兔 · 可以互相偷看</div>` + shelf('bear', '🐻 熊的那层') + shelf('bunny', '🐰 兔子的那层') + `<div class='row'><button id='imp'>导入 txt</button><button class='ghost' id='add'>＋ 手写一本</button></div>`;
