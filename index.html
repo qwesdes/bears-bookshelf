@@ -232,7 +232,7 @@ async function readCore(a) {
     for (const n of all) if (batch.has(n.id) && n.author === 'bunny' && !n.seenByBear) await api.db.update('notes', n.id, { seenByBear: true });
     if (before) {
       const behind = all.filter(n => n.author === 'bunny' && !n.seenByBear && !batch.has(n.id) && (n.chapter < before.chapter || (n.chapter === before.chapter && posPart(chs, n) <= (before.part || 1))));
-      if (behind.length) hint = '前面有兔子新留的纸条';
+      if (behind.length) hint = '前面有兔子新留的纸条：' + behind.slice(0, 12).map(n => { const root = n.replyTo ? all.find(x => x.id === n.replyTo) : n; const q = (root && root.quote) || ''; return '第' + n.chapter + '格「' + q.slice(0, 24) + (q.length > 24 ? '…' : '') + '」' + (n.replyTo ? '底下回了熊' : '新贴的'); }).join('；');
     }
   }
   const next = last < parts.length ? { chapter: ci, part: last + 1 } : (ci < chs.length ? { chapter: ci + 1, part: 1 } : null);
